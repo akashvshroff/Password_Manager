@@ -10,11 +10,6 @@ import pyperclip
 class ManagePasswords:
 
     def __init__(self):
-        # create sqlite connection
-        # create tables
-        # admin password
-        # call the driver function
-        # while loop the driver function??
         self.conn = sqlite3.connect("password_database.sqlite")
         self.cur = self.conn.cursor()
         self.cur.execute(
@@ -28,8 +23,6 @@ class ManagePasswords:
         self.driver()
 
     def create_password(self):
-        # get sample size from users
-        # call store password and copy password
         print("Enter service name.")
         self.service = input()
         print("Enter username.")
@@ -87,9 +80,7 @@ class ManagePasswords:
         self.conn.commit()
 
     def retrieve_password(self):
-        # ask if they wanna see services and call show services
         # get hash key and then fetch from sql
-        # call copy password
         passw_present = self.show_services()
         if not passw_present:
             print("You cannot access passwords if there aren't any.")
@@ -120,7 +111,6 @@ class ManagePasswords:
         # get all the services and then display
         self.cur.execute("SELECT service, username FROM User_Info")
         self.rows = self.cur.fetchall()
-        # print(self.rows)
         if not self.rows:
             print("No passwords to display.")
             return False
