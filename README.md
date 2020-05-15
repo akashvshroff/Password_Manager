@@ -11,7 +11,7 @@
     ```python
     def get_hash_key(self):
     		hash = sha256(self.service.lower().encode('utf-8')+self.user_name.lower().encode('utf-8')
-    									+ self.admin_password.lower().encode('utf-8')).hexdigest()
+    		+ self.admin_password.lower().encode('utf-8')).hexdigest()
     		self.hash_key = hash[:15]
     ```
     
