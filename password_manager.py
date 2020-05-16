@@ -79,6 +79,17 @@ class ManagePasswords:
         print("Securely stored onto database.")
         self.conn.commit()
 
+    def randomize_order(self):
+        # randomizes the order of user info stored in the table
+        self.cur.execute("SELECT service, username FROM User_Info")
+        data = self.cur.fetchall()
+        random.shuffle(data)
+        self.cur.execute("DELETE FROM User_Info")
+        for row in data:
+            self.cur.execute('INSERT INTO User_Info(service,username) VALUES (?,?)',
+                             ((row[0], row[1],)))
+        self.conn.commit()
+
     def retrieve_password(self):
         # get hash key and then fetch from sql
         passw_present = self.show_services()
@@ -102,6 +113,7 @@ class ManagePasswords:
             self.get_hash_key()
             self.cur.execute('SELECT password from Passwords WHERE hash_key = ?', (self.hash_key,))
             self.passw = self.cur.fetchone()[0]
+            time.sleep(0.25)
             print("Password for {} and username {} is {}".format(
                 self.service, self.user_name, self.passw))
             self.copy_password()
@@ -109,7 +121,7 @@ class ManagePasswords:
     def show_services(self):
         # called by retrieve password
         # get all the services and then display
-        self.cur.execute("SELECT service, username FROM User_Info")
+        self.cur.execute("SELECT service, username FROM User_Info ORDER BY service ASC")
         self.rows = self.cur.fetchall()
         if not self.rows:
             print("No passwords to display.")
@@ -119,7 +131,8 @@ class ManagePasswords:
             print("Services and Usernames:")
             for i, (ser, user) in enumerate(self.rows):
                 i += 1
-                print('{}. Service: {}, Username: {}.'.format(i, ser, user))
+                print('{:02}. Service: {}, Username: {}.'.format(i, ser, user))
+                time.sleep(0.1)
             print()
             return True
 
@@ -127,6 +140,7 @@ class ManagePasswords:
         # copy to clipboard using pyperclip
         pyperclip.copy(self.passw)
         time.sleep(1)
+        print()
         print("Password copied to clipboard.")
 
     def delete_password(self):
@@ -166,6 +180,7 @@ class ManagePasswords:
             print("Deleted record.")
 
     def quit_program(self):
+        self.randomize_order()
         print("Saving changes to database and quitting.")
         self.conn.close()
         time.sleep(0.5)

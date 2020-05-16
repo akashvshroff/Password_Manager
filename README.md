@@ -14,12 +14,25 @@
     	              + self.admin_password.lower().encode('utf-8')).hexdigest()
     	self.hash_key = hash[:15]
     ```
-    
+
 - The encoding helps ensure the same hash is generated when we try to access the password.
 - The program makes it so that a user can choose to store an old password, create a new one, access all stored passwords or delete an old password.
 - Each call takes in the service name and username, validates them when necessary and retrieves the password from the data base by generating the hash_key for the service and username as shown above and then querying the database where the primary key is the same as the first 15 characters of this hash key.
 - Therefore the foreign key is generated for at each call and isn't stored anywhere adding immense security.
 - Maintaining the user login info, service and username means that there is a potential threat as someone can brute force all the possible passwords and the possible login credentials but this threat is exponentially minimized as the password manager is used more as the number of possible combinations (the cartesian product of the service,username and the password) increases greatly.
+- Another feature that maintains security is the randomize_order function. When a user generates or stores a password, the login credentials and password info are stored on the same row number and therefore to avoid that, the function, which is called whenever the program quits retrieves all the data stored in the User_Info table, shuffles it and then reupdates the data so if anyone accesses the database, they will not be able to identify which password belongs to which service.
+    ```python
+    def randomize_order(self):
+            # randomizes the order of user info stored in the table
+            self.cur.execute("SELECT service, username FROM User_Info")
+            data = self.cur.fetchall()
+            random.shuffle(data)
+            self.cur.execute("DELETE FROM User_Info")
+            for row in data:
+                self.cur.execute('INSERT INTO User_Info(service,username) VALUES (?,?)',
+                                 ((row[0], row[1],)))
+            self.conn.commit()
+    ```
 - The password generator randomly chooses a user inputted number of characters from upper and lowercase letters, numbers and special characters(optional).
 - The rest of the characters do as they are named.
 - Built on the foundations of OOP, the program places modularity in high regard and therefore most methods are reused within the program.
