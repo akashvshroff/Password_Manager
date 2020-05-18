@@ -104,6 +104,7 @@ class ManagePasswords:
                 print()
                 print("Enter username for the service.")
                 self.user_name = input()
+                print()
                 if (self.service, self.user_name) in self.rows:
                     break
                 else:
@@ -139,9 +140,9 @@ class ManagePasswords:
     def copy_password(self):
         # copy to clipboard using pyperclip
         pyperclip.copy(self.passw)
-        time.sleep(1)
-        print()
+        time.sleep(0.5)
         print("Password copied to clipboard.")
+        print()
 
     def delete_password(self):
         passw_present = self.show_services()
