@@ -1,3 +1,6 @@
+# Update
+* I have since converted the program into a GUI using tkinter in order to increase the ease of use. The tkinter GUI follows a basic 3 tab structure and the program is fairly self explanatory and generously adorned with comments! Let me know if there are any issues.
+
 # Outline:
 - An all-in-one password system to rule them all. It stores your passwords in an SQL database along with the services they access through  quasi-relational tables which use a hash (via the hashlib module) as the primary key and an invisible foreign key. The system stores your old passwords and generates new passwords, allowing to access all your login credentials securely via one single master password. A more detailed explanation lies below.
 
